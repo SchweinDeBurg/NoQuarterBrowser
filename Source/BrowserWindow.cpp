@@ -364,7 +364,7 @@ void BrowserWindow::onToolsHistory(void)
 
 void BrowserWindow::onHelpHomePage(void)
 {
-	m_tabWidget->createBrowserPage(tr(""), QUrl("https://github.com/SchweinDeBurg/"));
+	m_tabWidget->createBrowserPage(tr(""), QUrl("https://github.com/SchweinDeBurg/NoQuarterBrowser/"));
 }
 
 void BrowserWindow::onHelpAbout(void)
