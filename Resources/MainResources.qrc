@@ -1,0 +1,6 @@
+<RCC>
+	<qresource prefix="/">
+		<file>Graphics/TangoInetrnetWebBrowser.png</file>
+		<file>HTML/NewTabPage.html</file>
+	</qresource>
+</RCC>
