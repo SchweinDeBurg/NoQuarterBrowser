@@ -21,6 +21,17 @@ public:
 	bool restoreSettings(void);
 
 private:
+	void onTableViewCustomContextMenuRequested(const QPoint& pos);
+
+private:
+	void onOpenInNewWindow(void);
+	void onOpenInNewTab(void);
+
+private:
+	QAction* m_openInNewWindowAction;
+	QAction* m_openInNewTabAction;
+
+private:
 	QTableWidget* m_tableView;
 };
 

@@ -1,12 +1,14 @@
 #include <QDateTime>
 #include <QHeaderView>
 #include <QList>
+#include <QMenu>
 #include <QPair>
 #include <QSettings>
 #include <QVBoxLayout>
 
 #include <algorithm>
 
+#include <BrowserApplication.h>
 #include <BrowserWindow.h>
 #include <HistoryPageWidget.h>
 
@@ -23,11 +25,19 @@ AbstractPageWidget(tabWidget, parent)
 	m_tableView->setHorizontalHeaderLabels(headersList);
 	m_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 	m_tableView->horizontalHeader()->setHighlightSections(false);
+	m_tableView->setContextMenuPolicy(Qt::CustomContextMenu);
 
 	QVBoxLayout* viewLayout = new QVBoxLayout();
 	viewLayout->addWidget(m_tableView);
 	viewLayout->setContentsMargins(0, 0, 0, 0);
 	setLayout(viewLayout);
+
+	m_openInNewWindowAction = new QAction(tr("Open URL in New &Window"), this);
+	connect(m_openInNewWindowAction, &QAction::triggered, this, &HistoryPageWidget::onOpenInNewWindow);
+	m_openInNewTabAction = new QAction(tr("Open URL in New &Tab"), this);
+	connect(m_openInNewTabAction, &QAction::triggered, this, &HistoryPageWidget::onOpenInNewTab);
+
+	connect(m_tableView, &QTableWidget::customContextMenuRequested, this, &HistoryPageWidget::onTableViewCustomContextMenuRequested);
 }
 
 HistoryPageWidget::~HistoryPageWidget(void)
@@ -89,4 +99,34 @@ bool HistoryPageWidget::restoreSettings(void)
 	bool hasState = m_tableView->horizontalHeader()->restoreState(appSettings.value("HeaderState").toByteArray());
 	appSettings.endGroup();
 	return (hasState);
+}
+
+void HistoryPageWidget::onTableViewCustomContextMenuRequested(const QPoint& pos)
+{
+	if (QTableWidgetItem* item = m_tableView->itemAt(pos); item != nullptr)
+	{
+		QMenu* contextMenu = new QMenu(this);
+		contextMenu->setAttribute(Qt::WA_DeleteOnClose, true);
+		contextMenu->addAction(m_openInNewWindowAction);
+		contextMenu->addAction(m_openInNewTabAction);
+		contextMenu->popup(QCursor::pos());
+	}
+}
+
+void HistoryPageWidget::onOpenInNewWindow(void)
+{
+	if (auto browserApp = dynamic_cast<BrowserApplication*>(BrowserApplication::instance()); browserApp != nullptr)
+	{
+		BrowserWindow* window = browserApp->createBrowserWindow();
+		window->show();
+		QApplication::setActiveWindow(window);
+		QUrl url(m_tableView->item(m_tableView->selectedItems().first()->row(), I_URL)->text());
+		window->createBrowserTab(tr("NoQuarter"), url);
+	}
+}
+
+void HistoryPageWidget::onOpenInNewTab(void)
+{
+	QUrl url(m_tableView->item(m_tableView->selectedItems().first()->row(), I_URL)->text());
+	m_tabWidget->createBrowserPage(tr("NoQuarter"), url);
 }
