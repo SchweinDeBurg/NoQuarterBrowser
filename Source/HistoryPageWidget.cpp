@@ -36,39 +36,42 @@ HistoryPageWidget::~HistoryPageWidget(void)
 
 void HistoryPageWidget::refreshTableView(void)
 {
-	QHash<QString, QDateTime>& urlsHistory = BrowserWindow::urlsHistory();
-	QList<QPair<QString, QDateTime>> urlsList;
-	for (auto key : urlsHistory.keys())
-	{
-		urlsList.append(QPair<QString, QDateTime>(key, urlsHistory[key]));
-	}
-	std::sort(urlsList.begin(), urlsList.end(), [](auto lhs, auto rhs)
-	{
-		return (lhs.second > rhs.second);
-	});
-
-	setUpdatesEnabled(false);
 	m_tableView->setRowCount(0);
-	for (auto curPair : urlsList)
+	QHash<QString, QDateTime>& urlsHistory = BrowserWindow::urlsHistory();
+	if (urlsHistory.count() > 0)
 	{
-		QVector<QTableWidgetItem*> itemsRow =
+		QList<QPair<QString, QDateTime>> urlsList;
+		for (auto key : urlsHistory.keys())
 		{
-			new QTableWidgetItem(curPair.first),
-			new QTableWidgetItem(curPair.second.toString("dd.MM.yyyy HH:mm:ss"))
-		};
-		itemsRow[I_URL]->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-		itemsRow[I_DATETIME]->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-		m_tableView->insertRow(m_tableView->rowCount());
-		for (int row = m_tableView->rowCount() - 1, column = 0; column < NUM_COLUMNS; ++column)
-		{
-			m_tableView->setItem(row, column, itemsRow[column]);
+			urlsList.append(QPair<QString, QDateTime>(key, urlsHistory[key]));
 		}
+		std::sort(urlsList.begin(), urlsList.end(), [](auto lhs, auto rhs)
+		{
+			return (lhs.second > rhs.second);
+		});
+
+		setUpdatesEnabled(false);
+		for (auto curPair : urlsList)
+		{
+			QVector<QTableWidgetItem*> itemsRow =
+			{
+				new QTableWidgetItem(curPair.first),
+				new QTableWidgetItem(curPair.second.toString("dd.MM.yyyy HH:mm:ss"))
+			};
+			itemsRow[I_URL]->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+			itemsRow[I_DATETIME]->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+			m_tableView->insertRow(m_tableView->rowCount());
+			for (int row = m_tableView->rowCount() - 1, column = 0; column < NUM_COLUMNS; ++column)
+			{
+				m_tableView->setItem(row, column, itemsRow[column]);
+			}
+		}
+		if (m_tableView->rowCount() > 0)
+		{
+			m_tableView->selectRow(0);
+		}
+		setUpdatesEnabled(true);
 	}
-	if (m_tableView->rowCount() > 0)
-	{
-		m_tableView->selectRow(0);
-	}
-	setUpdatesEnabled(true);
 }
 
 void HistoryPageWidget::saveSettings(void)
