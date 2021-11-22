@@ -3,13 +3,13 @@
 
 #include <QDebug>
 #include <QFrame>
-#include <QLineEdit>
 #include <QToolBar>
 #include <QUrl>
 #include <QWebEngineDownloadItem>
 #include <QWidget>
 
 #include <AbstractPageWidget.h>
+#include <AddressLineEdit.h>
 #include <CommonStuff.h>
 #include <CustomWebView.h>
 
@@ -40,12 +40,13 @@ private:
 
 public:
 	CustomWebView* webView(void) const;
+	AddressLineEdit* addressBar(void) const;
 
 private:
 	QFrame* m_viewFrame;
 	CustomWebView* m_webView;
 	QToolBar* m_buttonsBar;
-	QLineEdit* m_addressBar;
+	AddressLineEdit* m_addressBar;
 };
 
 inline void BrowserPageWidget::focusAddressBar(Qt::FocusReason reason)
@@ -66,6 +67,11 @@ inline void BrowserPageWidget::refreshWebView(void)
 inline CustomWebView* BrowserPageWidget::webView(void) const
 {
 	return (m_webView);
+}
+
+inline AddressLineEdit* BrowserPageWidget::addressBar(void) const
+{
+	return (m_addressBar);
 }
 
 #endif   // _BrowserPageWidget_h

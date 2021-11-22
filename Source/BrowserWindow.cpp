@@ -269,6 +269,7 @@ void BrowserWindow::onFileNewWindow(void)
 	Q_ASSERT(browserApp != nullptr);
 	BrowserWindow* window = browserApp->createBrowserWindow();
 	window->show();
+	QApplication::setActiveWindow(window);
 	window->createBlankTab();
 }
 

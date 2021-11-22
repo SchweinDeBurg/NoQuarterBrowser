@@ -1,5 +1,7 @@
+#include <QApplication>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QTimer>
 #include <QVBoxLayout>
 #include <QWebEngineProfile>
 
@@ -21,7 +23,7 @@ AbstractPageWidget(tabWidget, parent)
 	m_buttonsBar->addAction(m_webView->pageAction(QWebEnginePage::Reload));
 	m_buttonsBar->addAction(m_webView->pageAction(QWebEnginePage::Stop));
 
-	m_addressBar = new QLineEdit(m_buttonsBar);
+	m_addressBar = new AddressLineEdit(m_buttonsBar);
 	m_addressBar->setSizePolicy(QSizePolicy::Expanding, m_addressBar->sizePolicy().verticalPolicy());
 	m_buttonsBar->addWidget(m_addressBar);
 
@@ -95,6 +97,11 @@ void BrowserPageWidget::onWebViewLoadFinished(bool ok)
 	{
 		BrowserWindow::urlsHistory().insert(urlString, QDateTime::currentDateTime());
 	}
+	else
+	{
+		// https://stackoverflow.com/a/51807268
+		QTimer::singleShot(0, m_addressBar, &QLineEdit::selectAll);
+	}
 }
 
 void BrowserPageWidget::onWebViewDownloadRequested(QWebEngineDownloadItem* download)
@@ -123,5 +130,4 @@ void BrowserPageWidget::onWebViewDownloadRequested(QWebEngineDownloadItem* downl
 void BrowserPageWidget::onFocusAddressBar(void)
 {
 	focusAddressBar(Qt::OtherFocusReason);
-	m_addressBar->selectAll();
 }

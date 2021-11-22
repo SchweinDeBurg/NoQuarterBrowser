@@ -14,6 +14,7 @@ int main(int argc, char* argv[])
 
 	BrowserWindow* window = browserApp.createBrowserWindow();
 	window->show();
+	QApplication::setActiveWindow(window);
 	window->createBlankTab();
 
 	return (browserApp.exec());

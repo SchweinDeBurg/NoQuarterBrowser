@@ -30,6 +30,7 @@ find_package(Threads REQUIRED)
 # header files
 list(APPEND ${PROJECT_NAME}_HEADERS
 	Include/AbstractPageWidget.h
+	Include/AddressLineEdit.h
 	Include/BrowserApplication.h
 	Include/BrowserPageWidget.h
 	Include/BrowserTabWidget.h
@@ -45,6 +46,7 @@ list(APPEND ${PROJECT_NAME}_HEADERS
 # source files
 list(APPEND ${PROJECT_NAME}_SOURCES
 	Source/AbstractPageWidget.cpp
+	Source/AddressLineEdit.cpp
 	Source/BrowserApplication.cpp
 	Source/BrowserPageWidget.cpp
 	Source/BrowserTabWidget.cpp
