@@ -159,6 +159,17 @@ bool BrowserTabWidget::refreshCurrentPage(void)
 	return (false);
 }
 
+bool BrowserTabWidget::highlightAllLinks(void)
+{
+	if (auto browserPage = dynamic_cast<BrowserPageWidget*>(currentWidget()); browserPage != nullptr)
+	{
+		QString jsCode("qt.jQuery('a').each( function () { qt.jQuery(this).css({'color':'#FFFFFF','background-color':'#EF0FFF'}) } )");
+		browserPage->webView()->page()->runJavaScript(jsCode);
+		return (true);
+	}
+	return (false);
+}
+
 void BrowserTabWidget::onUndoCloseTab(void)
 {
 	if (m_recentUrls.count() > 0)

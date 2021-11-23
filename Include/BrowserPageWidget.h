@@ -47,6 +47,7 @@ private:
 	CustomWebView* m_webView;
 	QToolBar* m_buttonsBar;
 	AddressLineEdit* m_addressBar;
+	QString m_dzhejKwieri;
 };
 
 inline void BrowserPageWidget::focusAddressBar(Qt::FocusReason reason)

@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QFile>
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QTimer>
@@ -47,6 +48,14 @@ AbstractPageWidget(tabWidget, parent)
 	m_focusAddressBarAction->setShortcut(tr("Ctrl+L"));
 	addAction(m_focusAddressBarAction);
 	connect(m_focusAddressBarAction, &QAction::triggered, this, &BrowserPageWidget::onFocusAddressBar);
+
+	QFile resourceFile(":/Scripts/jquery-3.6.0-min.js");
+	if (resourceFile.open(QIODevice::ReadOnly))
+	{
+		m_dzhejKwieri = resourceFile.readAll();
+		m_dzhejKwieri.append("\nvar qt = { 'jQuery': jQuery.noConflict(true) };");
+		resourceFile.close();
+	}
 }
 
 BrowserPageWidget::~BrowserPageWidget(void)
@@ -102,6 +111,7 @@ void BrowserPageWidget::onWebViewLoadFinished(bool ok)
 		// https://stackoverflow.com/a/51807268
 		QTimer::singleShot(0, m_addressBar, &QLineEdit::selectAll);
 	}
+	m_webView->page()->runJavaScript(m_dzhejKwieri);
 }
 
 void BrowserPageWidget::onWebViewDownloadRequested(QWebEngineDownloadItem* download)
