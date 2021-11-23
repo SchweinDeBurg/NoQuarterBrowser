@@ -14,6 +14,11 @@ m_downloadsPage(nullptr)
 	setUsesScrollButtons(true);
 	setMovable(true);
 	setDocumentMode(false);
+
+	m_undoCloseTabAction = new QAction(this);
+	m_undoCloseTabAction->setShortcut(tr("Ctrl+Shift+T"));
+	addAction(m_undoCloseTabAction);
+	connect(m_undoCloseTabAction, &QAction::triggered, this, &BrowserTabWidget::onUndoCloseTab);
 }
 
 BrowserTabWidget::~BrowserTabWidget(void)
@@ -32,26 +37,59 @@ int BrowserTabWidget::createBrowserPageAt(int index, const QString& label, const
 
 int BrowserTabWidget::createDownloadsPage(bool setCurrent)
 {
-	const QString title(tr("Downloads"));
-	return (createDownloadsPage(setCurrent, &BrowserTabWidget::createTab, title));
+	const QString label(tr("Downloads"));
+	return (createDownloadsPage(setCurrent, &BrowserTabWidget::createTab, label));
 }
 
 int BrowserTabWidget::createDownloadsPageAt(int index, bool setCurrent)
 {
-	const QString title(tr("Downloads"));
-	return (createDownloadsPage(setCurrent, &BrowserTabWidget::createTabAt, index, title));
+	const QString label(tr("Downloads"));
+	return (createDownloadsPage(setCurrent, &BrowserTabWidget::createTabAt, index, label));
 }
 
 int BrowserTabWidget::createHistoryPage(bool setCurrent)
 {
-	const QString title(tr("History"));
-	return (createHistoryPage(setCurrent, &BrowserTabWidget::createTab, title));
+	const QString label(tr("History"));
+	return (createHistoryPage(setCurrent, &BrowserTabWidget::createTab, label));
 }
 
 int BrowserTabWidget::createHistoryPageAt(int index, bool setCurrent)
 {
-	const QString title(tr("History"));
-	return (createHistoryPage(setCurrent, &BrowserTabWidget::createTabAt, index, title));
+	const QString label(tr("History"));
+	return (createHistoryPage(setCurrent, &BrowserTabWidget::createTabAt, index, label));
+}
+
+int BrowserTabWidget::createRecentPage(bool setCurrent)
+{
+	const QString label(tr("NoQuarter"));
+	QUrl url = m_recentUrls.pop();
+	return (createBrowserPage(url, setCurrent, &BrowserTabWidget::createTab, label));
+}
+
+int BrowserTabWidget::createRecentPageAt(int index, bool setCurrent)
+{
+	const QString label(tr("NoQuarter"));
+	QUrl url = m_recentUrls.pop();
+	return (createBrowserPage(url, setCurrent, &BrowserTabWidget::createTabAt, index, label));
+}
+
+void BrowserTabWidget::removePage(int index)
+{
+	QWidget* somePage = widget(index);
+	if (auto browserPage = dynamic_cast<BrowserPageWidget*>(somePage); browserPage != nullptr)
+	{
+		m_recentUrls.push(browserPage->webView()->url());
+	}
+	else if (auto downloadsPage = dynamic_cast<DownloadsPageWidget*>(somePage); downloadsPage != nullptr)
+	{
+		downloadsPage->saveSettings();
+		releaseDownloadsPage();
+	}
+	else if (auto historyPage = dynamic_cast<HistoryPageWidget*>(somePage); historyPage != nullptr)
+	{
+		historyPage->saveSettings();
+	}
+	removeTab(index);
 }
 
 bool BrowserTabWidget::setPageUrl(int index, const QUrl& url)
@@ -119,6 +157,14 @@ bool BrowserTabWidget::refreshCurrentPage(void)
 		return (true);
 	}
 	return (false);
+}
+
+void BrowserTabWidget::onUndoCloseTab(void)
+{
+	if (m_recentUrls.count() > 0)
+	{
+		createRecentPage();
+	}
 }
 
 unsigned int BrowserTabWidget::currentPageZoomPercent(void) const

@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QTabWidget>
+#include <QStack>
 #include <QUrl>
 
 #include <CommonStuff.h>
@@ -20,12 +21,18 @@ public:
 	int createDownloadsPageAt(int index, bool setCurrent = true);
 	int createHistoryPage(bool setCurrent = true);
 	int createHistoryPageAt(int index, bool setCurrent = true);
+	int createRecentPage(bool setCurrent = true);
+	int createRecentPageAt(int index, bool setCurrent = true);
+	void removePage(int index);
 	void releaseDownloadsPage(void);
 	bool setPageUrl(int index, const QUrl& url);
 	bool setTabText(QWidget* pageWidget, const QString& label);
 	bool zoomCurrentPage(ZoomDirection direction);
 	void changeCurrentPage(ChangeDirection direction);
 	bool refreshCurrentPage(void);
+
+private:
+	void onUndoCloseTab(void);
 
 public:
 	unsigned int currentPageZoomPercent(void) const;
@@ -42,7 +49,11 @@ private:
 	int createHistoryPage(bool setCurrent, int (BrowserTabWidget::*createFunc)(QWidget*, Args...), Args&&... createArgs);
 
 private:
+	QAction* m_undoCloseTabAction;
+
+private:
 	QWidget* m_downloadsPage;
+	QStack<QUrl> m_recentUrls;
 };
 
 inline void BrowserTabWidget::releaseDownloadsPage(void)

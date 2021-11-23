@@ -14,8 +14,6 @@
 #include <BrowserPageWidget.h>
 #include <BrowserWindow.h>
 #include <CommonStuff.h>
-#include <DownloadsPageWidget.h>
-#include <HistoryPageWidget.h>
 
 BrowserWindow::BrowserWindow(QWidget* parent):
 QMainWindow(parent)
@@ -84,16 +82,7 @@ void BrowserWindow::removeTab(int index)
 	QWidget* somePage = m_tabWidget->widget(index);
 	if (m_tabWidget->count() > 1)
 	{
-		if (auto downloadsPage = dynamic_cast<DownloadsPageWidget*>(somePage); downloadsPage != nullptr)
-		{
-			downloadsPage->saveSettings();
-			m_tabWidget->releaseDownloadsPage();
-		}
-		else if (auto historyPage = dynamic_cast<HistoryPageWidget*>(somePage); historyPage != nullptr)
-		{
-			historyPage->saveSettings();
-		}
-		m_tabWidget->removeTab(index);
+		m_tabWidget->removePage(index);
 	}
 	else if (auto browserPage = dynamic_cast<BrowserPageWidget*>(somePage); browserPage != nullptr)
 	{
