@@ -165,8 +165,8 @@ void BrowserWindow::createActions(void)
 	m_historyAction->setStatusTip(tr("Open a tab with the list of visited web pages"));
 	m_historyAction->setShortcut(tr("Ctrl+H"));
 
-	m_highlightAllLinksAction = new QAction(tr("Highlight All &Links"), this);
-	m_highlightAllLinksAction->setStatusTip(tr("Highlight all links on the current page"));
+	m_highlightLinksAction = new QAction(tr("Highlight &Links"), this);
+	m_highlightLinksAction->setStatusTip(tr("Highlight all links on the current page"));
 
 	m_homePageAction = new QAction(tr("&Home Page"), this);
 	m_homePageAction->setStatusTip(tr("Visit project's page on GitHub"));
@@ -196,7 +196,7 @@ void BrowserWindow::connectActions(void)
 
 	connect(m_downloadsAction, &QAction::triggered, this, &BrowserWindow::onToolsDownloads);
 	connect(m_historyAction, &QAction::triggered, this, &BrowserWindow::onToolsHistory);
-	connect(m_highlightAllLinksAction, &QAction::triggered, this, &BrowserWindow::onToolsHighlightAllLinks);
+	connect(m_highlightLinksAction, &QAction::triggered, this, &BrowserWindow::onToolsHighlightLinks);
 
 	connect(m_homePageAction, &QAction::triggered, this, &BrowserWindow::onHelpHomePage);
 	connect(m_aboutAction, &QAction::triggered, this, &BrowserWindow::onHelpAbout);
@@ -231,7 +231,7 @@ void BrowserWindow::createMenus(void)
 	m_toolsMenu->addAction(m_downloadsAction);
 	m_toolsMenu->addAction(m_historyAction);
 	m_toolsMenu->addSeparator();
-	m_toolsMenu->addAction(m_highlightAllLinksAction);
+	m_toolsMenu->addAction(m_highlightLinksAction);
 
 	m_helpMenu = menuBar()->addMenu(tr("&Help"));
 	m_helpMenu->addAction(m_homePageAction);
@@ -358,9 +358,9 @@ void BrowserWindow::onToolsHistory(void)
 	m_tabWidget->createHistoryPage();
 }
 
-void BrowserWindow::onToolsHighlightAllLinks(void)
+void BrowserWindow::onToolsHighlightLinks(void)
 {
-	m_tabWidget->highlightAllLinks();
+	m_tabWidget->highlightLinks();
 }
 
 void BrowserWindow::onHelpHomePage(void)

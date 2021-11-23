@@ -159,7 +159,7 @@ bool BrowserTabWidget::refreshCurrentPage(void)
 	return (false);
 }
 
-bool BrowserTabWidget::highlightAllLinks(void)
+bool BrowserTabWidget::highlightLinks(void)
 {
 	if (auto browserPage = dynamic_cast<BrowserPageWidget*>(currentWidget()); browserPage != nullptr)
 	{

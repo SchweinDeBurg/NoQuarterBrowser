@@ -30,7 +30,7 @@ public:
 	bool zoomCurrentPage(ZoomDirection direction);
 	void changeCurrentPage(ChangeDirection direction);
 	bool refreshCurrentPage(void);
-	bool highlightAllLinks(void);
+	bool highlightLinks(void);
 
 private:
 	void onUndoCloseTab(void);

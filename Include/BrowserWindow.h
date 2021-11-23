@@ -52,7 +52,7 @@ private:
 	void onViewRefresh(void);
 	void onToolsDownloads(void);
 	void onToolsHistory(void);
-	void onToolsHighlightAllLinks(void);
+	void onToolsHighlightLinks(void);
 	void onHelpHomePage(void);
 	void onHelpAbout(void);
 	void onHelpAboutQt(void);
@@ -75,7 +75,7 @@ private:
 	QAction* m_refreshAction;
 	QAction* m_downloadsAction;
 	QAction* m_historyAction;
-	QAction* m_highlightAllLinksAction;
+	QAction* m_highlightLinksAction;
 	QAction* m_homePageAction;
 	QAction* m_aboutAction;
 	QAction* m_aboutQtAction;
