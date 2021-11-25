@@ -3,5 +3,8 @@
 		<file>Graphics/TangoInetrnetWebBrowser.png</file>
 		<file>HTML/NewTabPage.html</file>
 		<file>Scripts/jquery-3.6.0-min.js</file>
+		<file>Scripts/JSDOMParser.js</file>
+		<file>Scripts/Readability.js</file>
+		<file>Scripts/Readerable.js</file>
 	</qresource>
 </RCC>

@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QFile>
 
 #include <BrowserPageWidget.h>
 #include <BrowserTabWidget.h>
@@ -19,6 +20,26 @@ m_downloadsPage(nullptr)
 	m_undoCloseTabAction->setShortcut(tr("Ctrl+Shift+T"));
 	addAction(m_undoCloseTabAction);
 	connect(m_undoCloseTabAction, &QAction::triggered, this, &BrowserTabWidget::onUndoCloseTab);
+
+	QFile resourceFile;
+	resourceFile.setFileName(":/Scripts/JSDOMParser.js");
+	if (resourceFile.open(QIODevice::ReadOnly))
+	{
+		m_domParser = resourceFile.readAll();
+		resourceFile.close();
+	}
+	resourceFile.setFileName(":/Scripts/Readability.js");
+	if (resourceFile.open(QIODevice::ReadOnly))
+	{
+		m_readabilityJS = resourceFile.readAll();
+		resourceFile.close();
+	}
+	resourceFile.setFileName(":/Scripts/Readerable.js");
+	if (resourceFile.open(QIODevice::ReadOnly))
+	{
+		m_readerableJS = resourceFile.readAll();
+		resourceFile.close();
+	}
 }
 
 BrowserTabWidget::~BrowserTabWidget(void)
@@ -164,6 +185,20 @@ bool BrowserTabWidget::highlightLinks(void)
 	if (auto browserPage = dynamic_cast<BrowserPageWidget*>(currentWidget()); browserPage != nullptr)
 	{
 		QString jsCode("qt.jQuery('a').each( function () { qt.jQuery(this).css({'color':'#FFFFFF','background-color':'#EF0FFF'}) } )");
+		browserPage->webView()->page()->runJavaScript(jsCode);
+		return (true);
+	}
+	return (false);
+}
+
+bool BrowserTabWidget::switchToReaderMode(void)
+{
+	if (auto browserPage = dynamic_cast<BrowserPageWidget*>(currentWidget()); browserPage != nullptr)
+	{
+		browserPage->webView()->page()->runJavaScript(m_domParser);
+		browserPage->webView()->page()->runJavaScript(m_readabilityJS);
+		browserPage->webView()->page()->runJavaScript(m_readerableJS);
+		QString jsCode("if (isProbablyReaderable(document)) { var article = new Readability(document).parse(); }");
 		browserPage->webView()->page()->runJavaScript(jsCode);
 		return (true);
 	}

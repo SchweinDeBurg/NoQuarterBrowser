@@ -31,6 +31,7 @@ public:
 	void changeCurrentPage(ChangeDirection direction);
 	bool refreshCurrentPage(void);
 	bool highlightLinks(void);
+	bool switchToReaderMode(void);
 
 private:
 	void onUndoCloseTab(void);
@@ -55,6 +56,9 @@ private:
 private:
 	QWidget* m_downloadsPage;
 	QStack<QUrl> m_recentUrls;
+	QString m_domParser;
+	QString m_readabilityJS;
+	QString m_readerableJS;
 };
 
 inline void BrowserTabWidget::releaseDownloadsPage(void)

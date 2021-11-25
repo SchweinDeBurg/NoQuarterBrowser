@@ -168,6 +168,9 @@ void BrowserWindow::createActions(void)
 	m_highlightLinksAction = new QAction(tr("Highlight &Links"), this);
 	m_highlightLinksAction->setStatusTip(tr("Highlight all links on the current page"));
 
+	m_readerModeAction = new QAction(tr("&Reader Mode"), this);
+	m_readerModeAction->setStatusTip(tr("Switch current page to the reader mode"));
+
 	m_homePageAction = new QAction(tr("&Home Page"), this);
 	m_homePageAction->setStatusTip(tr("Visit project's page on GitHub"));
 
@@ -197,6 +200,7 @@ void BrowserWindow::connectActions(void)
 	connect(m_downloadsAction, &QAction::triggered, this, &BrowserWindow::onToolsDownloads);
 	connect(m_historyAction, &QAction::triggered, this, &BrowserWindow::onToolsHistory);
 	connect(m_highlightLinksAction, &QAction::triggered, this, &BrowserWindow::onToolsHighlightLinks);
+	connect(m_readerModeAction, &QAction::triggered, this, &BrowserWindow::onToolsReaderMode);
 
 	connect(m_homePageAction, &QAction::triggered, this, &BrowserWindow::onHelpHomePage);
 	connect(m_aboutAction, &QAction::triggered, this, &BrowserWindow::onHelpAbout);
@@ -232,6 +236,7 @@ void BrowserWindow::createMenus(void)
 	m_toolsMenu->addAction(m_historyAction);
 	m_toolsMenu->addSeparator();
 	m_toolsMenu->addAction(m_highlightLinksAction);
+	m_toolsMenu->addAction(m_readerModeAction);
 
 	m_helpMenu = menuBar()->addMenu(tr("&Help"));
 	m_helpMenu->addAction(m_homePageAction);
@@ -361,6 +366,11 @@ void BrowserWindow::onToolsHistory(void)
 void BrowserWindow::onToolsHighlightLinks(void)
 {
 	m_tabWidget->highlightLinks();
+}
+
+void BrowserWindow::onToolsReaderMode(void)
+{
+	m_tabWidget->switchToReaderMode();
 }
 
 void BrowserWindow::onHelpHomePage(void)
